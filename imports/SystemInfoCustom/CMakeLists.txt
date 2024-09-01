@@ -12,4 +12,5 @@ qt_add_qml_module(SystemInfoCustom
     VERSION 1.0
     QML_FILES
         Constants.qml
+        PerfHistoryModel.qml
 )

@@ -2,15 +2,15 @@ pragma Singleton
 import QtQuick 6.7
 
 QtObject {
-    readonly property int width: 640
-    readonly property int height: 480
+    readonly property int width: 1450
+    readonly property int height: 800
 
     property string currentView: "HomeView"
 
-    property bool isBigDesktopLayout: true
-    property bool isSmallDesktopLayout: false
-    property bool isMobileLayout: false
-    property bool isSmallLayout: false
+    // property bool isBigDesktopLayout: true
+    // property bool isSmallDesktopLayout: false
+    // property bool isMobileLayout: false
+    // property bool isSmallLayout: false
 
     property string relativeFontDirectory: "fonts"
 

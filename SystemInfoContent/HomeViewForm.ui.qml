@@ -15,14 +15,11 @@ import SystemInfoCustomControls
 Pane {
     id: root
 
-    property alias startOperation: startOperation
     property alias uniqueID: uniqueID
     property alias cpuArch: cpuArch
     property alias kernelInfo: kernelInfo
     property alias hostName: hostName
     property alias productDetail: productDetail
-
-    property alias busyIndicator: busyIndicator
 
     topPadding: 4
     leftPadding: 27
@@ -35,7 +32,7 @@ Pane {
     padding: 0
     contentWidth: availableWidth
 
-    // required property var roomsList
+    required property var perfHistoryList
 
     background: Rectangle {
         anchors.fill: parent
@@ -99,7 +96,7 @@ Pane {
         SystemElementControl {
             id: cpuArch
 
-            title: "CPU"
+            title: "CPU Info"
             topLabel: "Current CPU Architecture"
             bottomLabel: "Architecture: "
 
@@ -111,7 +108,7 @@ Pane {
         SystemElementControl {
             id: kernelInfo
 
-            title: "Kernel"
+            title: "Kernel Info"
             topLabel: "Kernel Type: "
             bottomLabel: "Kernel Version: "
 
@@ -123,7 +120,7 @@ Pane {
         SystemElementControl {
             id: hostName
 
-            title: "Machines Name"
+            title: "Machine Name"
             topLabel: "Name: "
             bottomLabel: "Prertty Name: "
 
@@ -144,22 +141,6 @@ Pane {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Button {
-            id: startOperation
-            text: qsTr("Start operation")
-            palette.buttonText: Constants.primaryTextColor
-        }
-
-        BusyIndicator {
-            id: busyIndicator
-            running: false
-            background: Rectangle {
-                implicitWidth: 100
-                implicitHeight: 40
-                color: "#e0e0e0"
-                visible: parent.running
-            }
-        }
     }
 
     // Pane {

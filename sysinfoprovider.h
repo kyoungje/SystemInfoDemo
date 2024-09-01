@@ -24,6 +24,7 @@ class SysInfoProvider : public QObject
     QML_ELEMENT
 public:
     explicit SysInfoProvider(QObject *parent = nullptr);
+    ~SysInfoProvider();
 
     // QSysinfo static functions
     QByteArray bootUniqueId() const {return QSysInfo::bootUniqueId();}
@@ -37,12 +38,11 @@ public:
     QString	productVersion() {return QSysInfo::productVersion();}
 
 public slots:
-    void measureCPUFreq();
-    void performOperation();
+    void startMeasureCPUFreq();
+    void stopMeasureCPUFreq();
 
 signals:
-    void measureFreqFinished(const uint);
-    void operationFinished(const QString &operationResult);
+    void measureCPUFreqEvent(const uint);
 
 private:
     QString m_cpuName = "";
@@ -55,36 +55,44 @@ class MeasureWorker : public QThread
 private:
     LARGE_INTEGER freq, start_cnt, end_end;
     SysInfoProvider *pSysProvider;
-    const int iterations = 100000000; // Number of iterations to perform
+    const int iterations = 100000000;   // Number of iterations to perform
+    const int event_duration = 1;       // The duration of raising an event (1 sec)
 
 public:
+
+    bool m_started = false;
+
     MeasureWorker(SysInfoProvider *provider ) : pSysProvider(provider) {
         QueryPerformanceFrequency(&freq);
     }
 
     void run() override
     {
-        // Measure start time
-        QueryPerformanceCounter(&start_cnt);
+        while (m_started) {
+            // Measure start time
+            QueryPerformanceCounter(&start_cnt);
 
-        // Code to be executed in the thread
-        // Execute a large number of NOP instructions
-        volatile long long sum = 0;
-        for (int i = 0; i < iterations; ++i) {
-            sum += i; // This is a placeholder for CPU work
+            // Code to be executed in the thread
+            // Execute a large number of NOP instructions
+            volatile long long sum = 0;
+            for (int i = 0; i < iterations; ++i) {
+                sum += i; // This is a placeholder for CPU work
+            }
+
+            // Measure end time
+            QueryPerformanceCounter(&end_end);
+
+            // Calculate elapsed time in seconds
+            double elapsedTime = (double)(end_end.QuadPart - start_cnt.QuadPart) / freq.QuadPart;
+
+            // Estimate CPU frequency (assuming 1 NOP = 1 cycle, which is a simplification)
+            double cpuFrequency = iterations / elapsedTime;
+
+            if(pSysProvider)
+                emit pSysProvider->measureCPUFreqEvent(cpuFrequency);
+
+            QThread::sleep(event_duration);
         }
-
-        // Measure end time
-        QueryPerformanceCounter(&end_end);
-
-        // Calculate elapsed time in seconds
-        double elapsedTime = (double)(end_end.QuadPart - start_cnt.QuadPart) / freq.QuadPart;
-
-        // Estimate CPU frequency (assuming 1 NOP = 1 cycle, which is a simplification)
-        double cpuFrequency = iterations / elapsedTime;
-
-        if(pSysProvider)
-            emit pSysProvider->measureFreqFinished(cpuFrequency);
     }
 };
 

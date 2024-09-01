@@ -4,36 +4,38 @@
 import QtQuick
 import QtQuick.Controls
 import QtCharts
-import Thermostat
+import SystemInfoCustom
 
 Pane {
+    id: root
+
+    // property alias spline: spline
+
     width: 900
     height: 580
 
     padding: 0
-
-    property var energyValuesModel
-    property var tempValuesModel
-
-    property var energyValues: {
-        var enrg = [];
-        for (let i = 0; i < energyValuesModel.count; ++i) {
-            enrg.push(energyValuesModel.get(i).enrg);
-        }
-        return enrg;
-    }
+    property var historyModel
+    property var perfStats: historyModel.get(0)
+    property int maxHistory: perfStats.maxCount
 
     property var tempValues: {
-        var temp = [];
-        for (let i = 0; i < tempValuesModel.count; ++i) {
-            temp.push(tempValuesModel.get(i).tmp);
+        var temp = Array(maxHistory);
+        var historyNum = maxHistory;
+        var curHistoryIndex = perfStats.curIndex;
+
+        while (--historyNum >= 0){
+            temp[historyNum] = perfStats.freqStats.get(curHistoryIndex).freq;
+
+            if (--curHistoryIndex < 0)
+                curHistoryIndex = maxHistory - 1;
         }
         return temp;
     }
 
     property real maxValue
     property real minValue
-    property real avgValue
+    property real curValue
 
     background: Rectangle {
         radius: 12
@@ -41,51 +43,35 @@ Pane {
     }
 
     ValuesAxis {
-        id: barChartAxisY
-
-        min: 0
-        max: 2000
-        labelsColor: internal.energyBarColor
-        labelsFont.family: "Titillium Web"
-        labelsFont.pixelSize: internal.axisFontSize
-    }
-
-    ValuesAxis {
         id: splineChartAxisY
 
-        min: 0
-        max: 40
-        tickAnchor: 5
-        tickInterval: 10
+        min: 1000
+        max: 4000
+        tickAnchor: 500
+        tickInterval: 500
         tickType: ValuesAxis.TicksDynamic
         labelsColor: internal.splineChartColor
         labelsFont.family: "Titillium Web"
         lineVisible: false
+        gridLineColor: internal.splineGridColor
         labelsFont.pixelSize: internal.axisFontSize
     }
 
     ValuesAxis {
         id: splineChartAxisX
-
+        tickAnchor: 10
+        tickInterval: 10
         visible: false
         min: 0
-        max: 365
-    }
-
-    BarCategoryAxis {
-        id: barChartAxisX
-
-        labelsColor: internal.energyBarColor
-        gridVisible: false
-        labelsFont.family: "Titillium Web"
-        labelsFont.pixelSize: internal.axisFontSize
-        truncateLabels: false
-        categories: [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("May"), qsTr("Jun"), qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Oct"), qsTr("Nov"), qsTr("Dec")]
+        max: root.maxHistory
     }
 
     ChartView {
         id: chart
 
+        title: "STATSTICS Minimum/Current/Maximum (MHz): " + minValue + " / " + curValue + " / " + maxValue
+        titleColor: "#FFFF00"
+        titleFont: Constants.smallTitleFont
         anchors.fill: parent
         antialiasing: true
 
@@ -104,27 +90,10 @@ Pane {
         dropShadowEnabled: internal.dropShadowEnabled
         backgroundColor: Constants.accentColor
 
-        BarSeries {
-            id: mySeries
-
-            axisX: barChartAxisX
-            axisY: barChartAxisY
-            barWidth: internal.barWidth
-
-            BarSet {
-                id: energySet
-
-                label: "Energy Usage [wh]"
-                color: internal.energyBarColor
-                borderWidth: 0
-                values: energyValues
-            }
-        }
-
         SplineSeries {
             id: spline
 
-            name: "Temperature [°C]"
+            name: "CPU Frequency [MHz]"
             color: internal.splineChartColor
             width: internal.lineWidth
 
@@ -133,7 +102,25 @@ Pane {
 
             Component.onCompleted: function () {
                 for (var i = 0; i < tempValues.length; i++) {
-                    spline.append(i * 7, tempValues[i]);
+                    spline.append(i, tempValues[i]);
+                }
+            }
+
+            Connections {
+                target: sysInfoProvider
+
+                function onMeasureCPUFreqEvent(result) {
+                    curValue = (result/1000000).toFixed(1);
+
+                    tempValues.shift();
+                    tempValues.push(curValue);
+
+                    maxValue = Math.max(...tempValues).toFixed(1);
+                    minValue = Math.min(...tempValues.filter(value => value !== 0)).toFixed(1);
+
+                    for (var i = 0; i < tempValues.length; i++) {
+                        spline.replace(i, i, tempValues[i]);
+                    }
                 }
             }
         }
@@ -144,55 +131,15 @@ Pane {
 
         property int fontSize: 14
         property int axisFontSize: 14
-        property int lineWidth: 5
-        property real barWidth: 0.5
+        property int lineWidth: 3
         property bool dropShadowEnabled: true
-        readonly property color energyBarColor: AppSettings.isDarkTheme ? "#2CDE85" : "#00414A"
-        readonly property color splineChartColor: AppSettings.isDarkTheme ? "#D9D9D9" : "#2CDE85"
+        readonly property color splineChartColor: "#2FA8C3"
+        readonly property color splineGridColor: "#707070"
     }
 
-    states: [
-        State {
-            name: "desktopLayout"
-            when: Constants.isSmallDesktopLayout || Constants.isBigDesktopLayout
-            PropertyChanges {
-                target: internal
-                fontSize: 14
-                axisFontSize: 14
-                lineWidth: 5
-                barWidth: 0.5
-                dropShadowEnabled: true
-            }
-        },
-        State {
-            name: "mobileLayout"
-            when: Constants.isMobileLayout
-            PropertyChanges {
-                target: internal
-                fontSize: 10
-                axisFontSize: 8
-                lineWidth: 2
-                barWidth: 0.7
-                dropShadowEnabled: false
-            }
-        },
-        State {
-            name: "smallLayout"
-            when: Constants.isSmallLayout
-            PropertyChanges {
-                target: internal
-                fontSize: 8
-                axisFontSize: 10
-                lineWidth: 2
-                barWidth: 0.6
-                dropShadowEnabled: false
-            }
-        }
-    ]
-
-    Component.onCompleted: function () {
-        maxValue = Math.max(...tempValues).toFixed(1);
-        minValue = Math.min(...tempValues).toFixed(1);
-        avgValue = (tempValues.reduce((a, b) => a + b, 0) / tempValues.length).toFixed(1);
-    }
+    // Component.onCompleted: function () {
+    //     maxValue = Math.max(...tempValues).toFixed(1);
+    //     minValue = Math.min(...tempValues).toFixed(1);
+    //     avgValue = (tempValues.reduce((a, b) => a + b, 0) / tempValues.length).toFixed(1);
+    // }
 }

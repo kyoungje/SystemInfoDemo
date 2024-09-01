@@ -3,7 +3,6 @@ import QtQuick 2.15
 HomeViewForm {
 
     Component.onCompleted: function() {
-        busyIndicator.running = true
 
         uniqueID.topLabel = sysInfoProvider.machineUniqueId
         uniqueID.bottomLabel = sysInfoProvider.bootUniqueId
@@ -15,26 +14,5 @@ HomeViewForm {
         hostName.bottomLabel = ""
         productDetail.topLabel = sysInfoProvider.prettyProductName
         productDetail.bottomLabel = ""
-
-        // sysInfoProvider.performOperation()
-        sysInfoProvider.measureCPUFreq()
     }
-
-    startOperation.onClicked:  {
-        busyIndicator.running = true
-        // sysInfoProvider.performOperation()
-        sysInfoProvider.measureCPUFreq()
-      }
-
-    Connections {
-        target: sysInfoProvider
-        // function onOperationFinished(result) {
-        //     roomName.text = "Operation result: " + result
-        //     busyIndicator.running = false
-        // }
-        function onMeasureFreqFinished(result) {
-            startOperation.text = "Freq: " + result
-            busyIndicator.running = false
-        }
-      }
 }

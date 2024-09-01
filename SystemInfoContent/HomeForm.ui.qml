@@ -14,6 +14,8 @@ import SystemInfoCustom
 Page {
     id: root
 
+    property alias perfHistoryList: perfHistoryList
+
     background: Rectangle {
         color: Constants.accentColor
     }
@@ -27,7 +29,7 @@ Page {
         anchors.bottom: parent.bottom
 
         initialItem: HomeView {
-
+            perfHistoryList: perfHistoryList
         }
     }
 
@@ -41,7 +43,11 @@ Page {
         height: parent.height
 
         menuOptions: menuItems
-        // roomsList: roomsList
+        perfHistoryList: perfHistoryList
+    }
+
+    PerfHistoryModel {
+        id: perfHistoryList
     }
 
     ListModel {

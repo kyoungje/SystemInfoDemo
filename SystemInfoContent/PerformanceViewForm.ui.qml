@@ -6,21 +6,35 @@ It is supposed to be strictly declarative and only uses a subset of QML. If you 
 this file manually, you might introduce QML code that is not supported by Qt Design Studio.
 Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on .ui.qml files.
 */
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import SystemInfoCustom
+import SystemInfoCustomControls
 
 Pane {
     id: root
+
+    property alias startMeasure: startMeasure
+    property alias stopMeasure: stopMeasure
+
+    required property var perfHistoryList
 
     leftPadding: 20
     rightPadding: 20
     bottomPadding: 15
 
-    property int currentRoomIndex: 0
-    // required property var roomsList
+    clip: true
+    padding: 0
+    contentWidth: availableWidth
+
+    property int delegateWidth: 350
+    property int delegateHeight: 182
+    property int performanceChartWidth: 1098
+    property int performanceChartHeight: 647
 
     background: Rectangle {
+        anchors.fill: parent
         color: Constants.backgroundColor
     }
 
@@ -32,12 +46,81 @@ Pane {
         Label {
             id: header
 
-            text: qsTr("Statistics")
+            text: qsTr("Performance")
             font: Constants.desktopTitleFont
             color: Constants.primaryTextColor
             elide: Text.ElideRight
         }
+
+        Label {
+            text: qsTr("Measure of the current CPU freqeuncy")
+            font.pixelSize: 24
+            font.weight: 600
+            font.family: "Titillium Web"
+            color: Constants.accentTextColor
+            elide: Text.ElideRight
+            Layout.fillWidth: true
+        }
+
+        Row {
+            Button {
+                id: startMeasure
+                text: qsTr("Start measure")
+            }
+
+            Button {
+                id: stopMeasure
+                text: qsTr("Stop measure")
+            }
+        }
     }
+
+    GridLayout {
+        id: grid
+
+        anchors.top: title.bottom
+        anchors.topMargin: 12
+        anchors.leftMargin: 28
+        anchors.bottomMargin: 12
+        anchors.rightMargin: 28
+
+        width: root.contentWidth
+        height: root.contentHeight
+
+        columns: 3
+        rows: 3
+        columnSpacing: 10
+        rowSpacing: 10
+
+        Pane {
+            id: performance
+
+            leftPadding: 53
+            rightPadding: 53
+            topPadding: 23
+            bottomPadding: 43
+
+            Layout.columnSpan: 3
+            Layout.rowSpan: 1
+
+            Layout.preferredHeight: root.performanceChartHeight
+            Layout.preferredWidth: root.performanceChartWidth
+            Layout.alignment: Qt.AlignHCenter
+
+            background: Rectangle {
+                radius: 12
+                color: Constants.accentColor
+            }
+
+            PerformanceChart {
+                id: performanceChart
+
+                historyModel: root.perfHistoryList
+                anchors.fill: parent
+            }
+        }
+    }
+
 
     QtObject {
         id: internal

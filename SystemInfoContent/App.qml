@@ -13,26 +13,21 @@ Window {
     minimumHeight: 272
 
     visible: true
-    title: "SystemInfoCustom"
+    title: "System Information and Performance Client"
 
     Home {
         id: mainScreen
         anchors.fill: parent
-    }
 
-    Component.onCompleted: function() {
-        Constants.isBigDesktopLayout = Qt.binding( function(){
-            return window.width >= Constants.width && window.width >= window.height
-        })
-        Constants.isSmallDesktopLayout = Qt.binding( function(){
-            return window.width >= 647 && window.width < Constants.width && window.width >= window.height
-        })
-        Constants.isMobileLayout = Qt.binding( function(){
-            return window.width < window.height
-        })
-        Constants.isSmallLayout = Qt.binding( function(){
-            return window.width < 647 && window.width >= window.height
-        })
+        Component.onCompleted: function() {
+            var perfStats = perfHistoryList.get(0);
+
+            for (let i = 0; i < perfStats.maxCount; ++i) {
+                perfStats.freqStats.append({"freq": 0});
+            }
+
+            perfStats.curIndex = perfStats.maxCount-1;
+        }
     }
 }
 

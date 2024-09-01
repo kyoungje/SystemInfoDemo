@@ -16,7 +16,7 @@ Column {
     id: root
 
     property alias menuOptions: repeater.model
-    // required property var roomsList
+    required property var perfHistoryList
 
     leftPadding: internal.leftPadding
     spacing: internal.spacing
@@ -105,9 +105,23 @@ Column {
                 function onClicked() {
                     if (columnItem.view != "SettingsView"
                             && columnItem.view != Constants.currentView) {
-                        stackView.replace(columnItem.view + ".qml", StackView.Immediate)
+                        stackView.replace(columnItem.view + ".qml", {
+                                                                    "perfHistoryList": perfHistoryList
+                                                                  }, StackView.Immediate)
                     }
                     Constants.currentView = columnItem.view
+                }
+            }
+
+            Connections {
+                target: sysInfoProvider
+
+                function onMeasureCPUFreqEvent(result) {
+                    var curValue = Math.trunc(result/1000000);
+                    var perfStats = perfHistoryList.get(0);
+
+                    perfStats.curIndex = ++perfStats.curIndex % perfStats.maxCount;
+                    perfStats.freqStats.set(perfStats.curIndex, {"freq": curValue});
                 }
             }
         }

@@ -4,9 +4,12 @@
 #include <QRandomGenerator>
 #include "sysinfoprovider.h"
 
+MeasureWorker *pMeasureThread;
 
 SysInfoProvider::SysInfoProvider(QObject *parent)
 {
+    pMeasureThread = new MeasureWorker(this);
+
     if (QSysInfo::kernelType() == "winnt")
     {
         const QString cpuname_cmd = "wmic";
@@ -59,36 +62,26 @@ SysInfoProvider::SysInfoProvider(QObject *parent)
     }
 }
 
-
-void SysInfoProvider::performOperation()
+SysInfoProvider::~SysInfoProvider()
 {
-    QTimer *timer = new QTimer(this);
-    timer->setSingleShot(true);
-
-    connect(timer, &QTimer::timeout, this, [this]() {
-        const int result = QRandomGenerator::global()->generate();
-        const QString &operationResult = result % 2 == 0
-                                             ? "success"
-                                             : "error";
-
-    });
-    timer->start(5000);
+    if (pMeasureThread)
+        delete pMeasureThread;
 }
 
 
-void SysInfoProvider::measureCPUFreq()
+void SysInfoProvider::startMeasureCPUFreq()
 {
+    if (pMeasureThread) {
+        if (!pMeasureThread->m_started) {
+            pMeasureThread->start();
+            pMeasureThread->m_started = true;
+        }
+    }
+}
 
-    // QProcess process_system;
-
-    // if(QSysInfo::kernelType() == "winnt")
-    // {
-    //     QString cpuname = "wmic cpu get name";
-    //     process_system.start(cpuname);
-    //     process_system.waitForFinished();
-    //     m_cpuName = process_system.readAllStandardOutput().toUpper();
-    // }
-
-    MeasureWorker *pthread = new MeasureWorker(this);
-    pthread->start();
+void SysInfoProvider::stopMeasureCPUFreq()
+{
+    if (pMeasureThread) {
+        pMeasureThread->m_started = false;
+    }
 }
