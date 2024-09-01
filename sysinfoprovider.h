@@ -56,7 +56,7 @@ private:
     LARGE_INTEGER freq, start_cnt, end_end;
     SysInfoProvider *pSysProvider;
     const int iterations = 100000000;   // Number of iterations to perform
-    const int event_duration = 1;       // The duration of raising an event (1 sec)
+    const int event_duration = 1;       // The duration of raising an event (3 sec)
 
 public:
 

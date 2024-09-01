@@ -7,11 +7,6 @@ QtObject {
 
     property string currentView: "HomeView"
 
-    // property bool isBigDesktopLayout: true
-    // property bool isSmallDesktopLayout: false
-    // property bool isMobileLayout: false
-    // property bool isSmallLayout: false
-
     property string relativeFontDirectory: "fonts"
 
     /* Edit this comment to add your custom font */

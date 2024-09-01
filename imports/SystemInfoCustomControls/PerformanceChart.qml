@@ -9,33 +9,46 @@ import SystemInfoCustom
 Pane {
     id: root
 
-    // property alias spline: spline
-
     width: 900
     height: 580
 
     padding: 0
-    property var historyModel
-    property var perfStats: historyModel.get(0)
-    property int maxHistory: perfStats.maxCount
-
-    property var tempValues: {
-        var temp = Array(maxHistory);
-        var historyNum = maxHistory;
-        var curHistoryIndex = perfStats.curIndex;
-
-        while (--historyNum >= 0){
-            temp[historyNum] = perfStats.freqStats.get(curHistoryIndex).freq;
-
-            if (--curHistoryIndex < 0)
-                curHistoryIndex = maxHistory - 1;
-        }
-        return temp;
-    }
+    required property var historyModel
+    property int maxHistory: historyModel.maxCount
 
     property real maxValue
     property real minValue
     property real curValue
+
+    function setSplineValues() {
+
+        var tempArray = Array(maxHistory);
+        var historyNum = maxHistory;
+        var curHistoryIndex = historyModel.curIndex;
+
+        var findMinValue = 0;
+        var findMaxValue = 0;
+
+        while (--historyNum >= 0) {
+            tempArray[historyNum] = historyModel.freqStats.get(curHistoryIndex).freq;
+
+            if (--curHistoryIndex < 0)
+                curHistoryIndex = maxHistory - 1;
+
+            if (findMaxValue == 0 || findMaxValue < tempArray[historyNum])
+                findMaxValue = tempArray[historyNum];
+
+            if (findMinValue == 0 || findMinValue > tempArray[historyNum])
+                findMinValue = tempArray[historyNum];
+        }
+
+        minValue = findMinValue;
+        maxValue = findMaxValue;
+
+        // console.log("Modified idx:", historyModel.curIndex, "Data:", tempArray);
+
+        return tempArray;
+    }
 
     background: Rectangle {
         radius: 12
@@ -69,7 +82,7 @@ Pane {
     ChartView {
         id: chart
 
-        title: "STATSTICS Minimum/Current/Maximum (MHz): " + minValue + " / " + curValue + " / " + maxValue
+        title: "[Statistics] Min: %1 / Current: %2 / Max: %3 (MHz)".arg(minValue).arg(curValue).arg(maxValue)
         titleColor: "#FFFF00"
         titleFont: Constants.smallTitleFont
         anchors.fill: parent
@@ -101,8 +114,9 @@ Pane {
             axisYRight: splineChartAxisY
 
             Component.onCompleted: function () {
-                for (var i = 0; i < tempValues.length; i++) {
-                    spline.append(i, tempValues[i]);
+                var tempArray = setSplineValues();
+                for (var i = 0; i < tempArray.length; i++) {
+                    spline.append(i, tempArray[i]);
                 }
             }
 
@@ -110,16 +124,11 @@ Pane {
                 target: sysInfoProvider
 
                 function onMeasureCPUFreqEvent(result) {
-                    curValue = (result/1000000).toFixed(1);
+                    curValue = Math.trunc(result/1000000);
 
-                    tempValues.shift();
-                    tempValues.push(curValue);
-
-                    maxValue = Math.max(...tempValues).toFixed(1);
-                    minValue = Math.min(...tempValues.filter(value => value !== 0)).toFixed(1);
-
-                    for (var i = 0; i < tempValues.length; i++) {
-                        spline.replace(i, i, tempValues[i]);
+                    var tempArray = setSplineValues();
+                    for (var i = 0; i < tempArray.length; i++) {
+                        spline.replace(i, i, tempArray[i]);
                     }
                 }
             }

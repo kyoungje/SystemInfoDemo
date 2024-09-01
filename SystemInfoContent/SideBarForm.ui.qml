@@ -106,7 +106,7 @@ Column {
                     if (columnItem.view != "SettingsView"
                             && columnItem.view != Constants.currentView) {
                         stackView.replace(columnItem.view + ".qml", {
-                                                                    "perfHistoryList": perfHistoryList
+                                                                    "perfHistoryList": perfHistoryList.get(0)
                                                                   }, StackView.Immediate)
                     }
                     Constants.currentView = columnItem.view
@@ -120,7 +120,9 @@ Column {
                     var curValue = Math.trunc(result/1000000);
                     var perfStats = perfHistoryList.get(0);
 
-                    perfStats.curIndex = ++perfStats.curIndex % perfStats.maxCount;
+                    perfStats.curIndex = (perfStats.curIndex + 1) % perfStats.maxCount;
+                    // console.log("new idx: ", perfStats.curIndex, "data:", curValue);
+
                     perfStats.freqStats.set(perfStats.curIndex, {"freq": curValue});
                 }
             }

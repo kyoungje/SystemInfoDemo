@@ -1,11 +1,12 @@
 import QtQuick 2.15
 
 PerformanceViewForm {
-    startMeasure.onClicked: {
-        sysInfoProvider.startMeasureCPUFreq()
-    }
+    startMeasure.onCheckedChanged: {
+        perfHistoryList.active = startMeasure.checked
 
-    stopMeasure.onClicked: {
-        sysInfoProvider.stopMeasureCPUFreq()
+        if (startMeasure.checked)
+            sysInfoProvider.startMeasureCPUFreq()
+        else
+            sysInfoProvider.stopMeasureCPUFreq()
     }
 }

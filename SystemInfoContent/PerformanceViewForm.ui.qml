@@ -16,7 +16,6 @@ Pane {
     id: root
 
     property alias startMeasure: startMeasure
-    property alias stopMeasure: stopMeasure
 
     required property var perfHistoryList
 
@@ -53,7 +52,7 @@ Pane {
         }
 
         Label {
-            text: qsTr("Measure of the current CPU freqeuncy")
+            text: qsTr("Measure of the current CPU's freqeuncy")
             font.pixelSize: 24
             font.weight: 600
             font.family: "Titillium Web"
@@ -62,16 +61,10 @@ Pane {
             Layout.fillWidth: true
         }
 
-        Row {
-            Button {
-                id: startMeasure
-                text: qsTr("Start measure")
-            }
-
-            Button {
-                id: stopMeasure
-                text: qsTr("Stop measure")
-            }
+        CustomSwitch {
+            id: startMeasure
+            checked: perfHistoryList.active
+            // onCheckedChanged: perfHistoryList.active = startMeasure.checked
         }
     }
 

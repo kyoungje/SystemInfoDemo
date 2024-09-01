@@ -8,6 +8,7 @@ qt_add_qml_module(SystemInfoCustomControls
     QML_FILES
         PerformanceChart.qml
         SystemElementControl.qml
+        CustomSwitch.qml
     RESOURCES
         images/keyboard.svg
         images/thermometer.svg
