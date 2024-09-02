@@ -39,7 +39,7 @@ QtObject {
 
     readonly property font desktopSubtitleFont: Qt.font({
             "family": "Titillium Web",
-            "pixelSize": 24,
+            "pixelSize": 26,
             "weight": 600
         })
 

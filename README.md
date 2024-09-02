@@ -21,5 +21,9 @@ This project shows how to retrieve the system informatation and send them to the
 This project implements the server functionality to gather client information and display the systeme information and performance chart user-friendly.
 
 ---
+install gradio
+https://www.gradio.app/guides/quickstart
+install gRPC
+https://grpc.io/docs/languages/python/quickstart/
 
 ## Notes

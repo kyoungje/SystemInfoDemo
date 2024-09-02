@@ -48,4 +48,8 @@ qt_add_qml_module(SystemInfoContent
         images/theme.svg
         images/thermostat.svg
         images/up.svg
+        images/LED.png
+        images/LED@2x.png
+        images/LED-Checked.png
+        images/LED-Checked@2x.png
 )

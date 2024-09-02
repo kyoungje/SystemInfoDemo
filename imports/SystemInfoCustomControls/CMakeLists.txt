@@ -14,7 +14,5 @@ qt_add_qml_module(SystemInfoCustomControls
         images/thermometer.svg
         images/tooltip.svg
         images/Screw@2x.png
-        images/LED@2x.png
-        images/LED-Checked@2x.png
 )
 
