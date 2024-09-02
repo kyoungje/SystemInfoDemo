@@ -14,5 +14,15 @@ HomeViewForm {
         hostName.bottomLabel = ""
         productDetail.topLabel = sysInfoProvider.prettyProductName
         productDetail.bottomLabel = ""
+
+        // Set the values to gRPC request
+        window._sysInfoReq.machineUniqueId = sysInfoProvider.machineUniqueId
+        window._sysInfoReq.bootUniqueId = sysInfoProvider.bootUniqueId
+        window._sysInfoReq.cpuName = sysInfoProvider.cpuName + " " + (sysInfoProvider.cpuFreq)/1000 + " GHz"
+        window._sysInfoReq.currentCpuArchitecture = sysInfoProvider.currentCpuArchitecture
+        window._sysInfoReq.kernelType = sysInfoProvider.kernelType
+        window._sysInfoReq.kernelVersion = sysInfoProvider.kernelVersion
+        window._sysInfoReq.machineHostName = sysInfoProvider.machineHostName
+        window._sysInfoReq.prettyProductName = sysInfoProvider.prettyProductName
     }
 }

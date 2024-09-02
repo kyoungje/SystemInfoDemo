@@ -9,6 +9,7 @@ ListModel {
     ListElement {
         name: qsTr("CPU Frequency")
         active: false
+        sync: false
         maxCount: 60
         curIndex: 0
         freqStats: [

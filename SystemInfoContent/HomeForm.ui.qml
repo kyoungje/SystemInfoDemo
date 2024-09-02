@@ -16,6 +16,7 @@ Page {
     id: root
 
     property alias perfHistoryList: perfHistoryList
+    property alias startSync: startSync
 
     background: Rectangle {
         color: Constants.accentColor

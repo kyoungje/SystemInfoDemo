@@ -1,0 +1,40 @@
+// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+syntax = "proto3";
+
+package qtgrpc.systeminfocustom;
+
+message TimeStamp {
+    int64 seconds = 1;
+    int32 nanos = 2;
+}
+
+message SystemInfoRequest {
+    TimeStamp timeStamp = 1;
+    string machineUniqueId = 2;
+    string bootUniqueId = 3;
+    string cpuName = 4;
+    string currentCpuArchitecture = 5;
+    string kernelType = 6;
+    string kernelVersion = 7;
+    string machineHostName = 8;
+    string prettyProductName = 9;
+}
+
+message SystemInfoResponse {
+    int32 result = 1;
+}
+
+message SystemPerfDataRequest {
+    TimeStamp timeStamp = 1;
+    uint32 frequency = 2;
+}
+
+message SystemPerfDataResponse {
+    int32 result = 1;
+}
+
+service SystemInfo {
+    rpc sendSystemInfo(SystemInfoRequest) returns (SystemInfoResponse) {}
+    rpc sendPerfData(stream SystemPerfDataRequest) returns (SystemPerfDataResponse) {}
+}
