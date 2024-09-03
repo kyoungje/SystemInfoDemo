@@ -35,13 +35,13 @@ timeStampLabel = gr.Label(SysInfoDict["timeStamp"], label="Time Stamp", color="#
 with gr.Blocks() as demo:
     gr.Markdown(
     """
-    # 🚀 System Information Server Demo
-    ## This server is designed to work with a Qt client using gRPC communication.
+    # 🚀 System Information Management Demo
+    ## This server program is designed to display system information sent from a **Qt client** using the gRPC communication.
 
-    ## When `Server Sync` is enabled in the client program,
-    - Below the chart, the client's system information such as **Architecture, Kernel**, and others are displayed.
-    ## When `CPU Performance Measure` is enabled in the client program,
-    - The **CPU Frequency** data measured by the client is displayed as a the line chart in real time. (*The latest one is shown at the right*)
+    ### ⚙️ When `Server Sync` is enabled in the client program,
+    ### Below the chart, the client's system information such as **Architecture, Kernel**, and others are displayed.
+    ### ⚙️ When `CPU Performance Measure` is enabled in the client program,
+    ### The **CPU Frequency** data measured by the client is visualized as a line chart in real-time. (*Note that the latest one is shown at the right*)
 
     ## 📈 Client Performance Chart
       
