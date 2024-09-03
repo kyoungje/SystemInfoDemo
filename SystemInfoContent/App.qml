@@ -19,9 +19,13 @@ Window {
 
     property systemInfoRequest  _sysInfoReq
     property systemInfoResponse _sysInfoResp
-    property var textError
+    property var setSysInfoResponse: function(value) { window._sysInfoResp = value }
 
-    property var setResponse: function(value) { window._sysInfoResp = value }
+    property systemPerfDataRequest  _perfDataReq
+    property systemPerfDataResponse _perfDataResp
+    property var setPerfDataResponse: function(value) { window._perfDataResp = value }
+
+    property var textError
     property var errorCallback: function() { console.log("Error can be handled also here") }
 
     Home {
@@ -52,7 +56,17 @@ Window {
 
         _sysInfoReq.timeStamp.seconds = (millis / 1000)
         _sysInfoReq.timeStamp.nanos = ((millis % 1000) * 1000000)
-        grpcClient.sendSystemInfo(_sysInfoReq, setResponse, errorCallback)
+        grpcClient.sendSystemInfo(_sysInfoReq, setSysInfoResponse, errorCallback)
+    }
+
+    function sendPerfDataToServer(freq)
+    {
+        var millis = Date.now()
+
+        _perfDataReq.timeStamp.seconds = (millis / 1000)
+        _perfDataReq.timeStamp.nanos = ((millis % 1000) * 1000000)
+        _perfDataReq.frequency = freq
+        grpcClient.sendPerfData(_perfDataReq, setPerfDataResponse, errorCallback)
     }
 
     SystemInfoClient {

@@ -27,3 +27,5 @@ install gRPC
 https://grpc.io/docs/languages/python/quickstart/
 
 ## Notes
+1. MINGW compile issue 
+2. QML stream gRPC issue

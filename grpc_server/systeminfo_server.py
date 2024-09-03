@@ -12,14 +12,7 @@ gRPC_thread.daemon = True
 gRPC_thread.start()
 
 DataStroage = grpc_server.SimpleDataStroage()
-SysInfoDict = DataStroage.get()
-
-def get_data():
-    return pd.DataFrame({
-        'Frequency': np.random.randint(1000, 5000, 60),
-        'Time': np.arange(60)
-    })
-
+SysInfoDict = DataStroage.getSysInfo()
 
 def update_timeStampLabel():
     oldTimeStamp = str(timeStampLabel.value["label"])
@@ -43,16 +36,19 @@ with gr.Blocks() as demo:
     gr.Markdown(
     """
     # 🚀 System Information Server Demo
-    ## This server is designed to work with a Qt client using gRPC communication. When `Server Sync` is enabled in the client program,
-    - The **CPU frequency** data measured by the client is displayed in a line plot in real time.  
-    - Below the chart, the client's system information such as **Architecture, Kernel**, etc are listed as shown.
-      
+    ## This server is designed to work with a Qt client using gRPC communication.
+
+    ## When `Server Sync` is enabled in the client program,
+    - Below the chart, the client's system information such as **Architecture, Kernel**, and others are displayed.
+    ## When `CPU Performance Measure` is enabled in the client program,
+    - The **CPU Frequency** data measured by the client is displayed as a the line chart in real time. (*The latest one is shown at the right*)
+
     ## 📈 Client Performance Chart
       
     """)
      
     timer = gr.Timer(1)
-    gr.LinePlot(get_data, title="CPU Frequency (MHz)", x="Time", y="Frequency", color_map={"Frequency": "#2FA8C3"}, y_aggregate=['min', 'max'], every=timer, )
+    gr.LinePlot(DataStroage.getPerfData, title="CPU Frequency (MHz)", x="Time", y="Frequency", every=timer, y_lim=[1000, 2500])
     
     gr.Markdown(
     """

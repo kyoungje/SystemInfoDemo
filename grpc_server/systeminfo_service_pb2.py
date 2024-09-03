@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18systeminfo_service.proto\x12\x17qtgrpc.systeminfocustom\"+\n\tTimeStamp\x12\x0f\n\x07seconds\x18\x01 \x01(\x03\x12\r\n\x05nanos\x18\x02 \x01(\x05\"\x89\x02\n\x11SystemInfoRequest\x12\x35\n\ttimeStamp\x18\x01 \x01(\x0b\x32\".qtgrpc.systeminfocustom.TimeStamp\x12\x17\n\x0fmachineUniqueId\x18\x02 \x01(\t\x12\x14\n\x0c\x62ootUniqueId\x18\x03 \x01(\t\x12\x0f\n\x07\x63puName\x18\x04 \x01(\t\x12\x1e\n\x16\x63urrentCpuArchitecture\x18\x05 \x01(\t\x12\x12\n\nkernelType\x18\x06 \x01(\t\x12\x15\n\rkernelVersion\x18\x07 \x01(\t\x12\x17\n\x0fmachineHostName\x18\x08 \x01(\t\x12\x19\n\x11prettyProductName\x18\t \x01(\t\"$\n\x12SystemInfoResponse\x12\x0e\n\x06result\x18\x01 \x01(\x05\"a\n\x15SystemPerfDataRequest\x12\x35\n\ttimeStamp\x18\x01 \x01(\x0b\x32\".qtgrpc.systeminfocustom.TimeStamp\x12\x11\n\tfrequency\x18\x02 \x01(\r\"(\n\x16SystemPerfDataResponse\x12\x0e\n\x06result\x18\x01 \x01(\x05\x32\xee\x01\n\nSystemInfo\x12k\n\x0esendSystemInfo\x12*.qtgrpc.systeminfocustom.SystemInfoRequest\x1a+.qtgrpc.systeminfocustom.SystemInfoResponse\"\x00\x12s\n\x0csendPerfData\x12..qtgrpc.systeminfocustom.SystemPerfDataRequest\x1a/.qtgrpc.systeminfocustom.SystemPerfDataResponse\"\x00(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18systeminfo_service.proto\x12\x17qtgrpc.systeminfocustom\"+\n\tTimeStamp\x12\x0f\n\x07seconds\x18\x01 \x01(\x03\x12\r\n\x05nanos\x18\x02 \x01(\x05\"\x89\x02\n\x11SystemInfoRequest\x12\x35\n\ttimeStamp\x18\x01 \x01(\x0b\x32\".qtgrpc.systeminfocustom.TimeStamp\x12\x17\n\x0fmachineUniqueId\x18\x02 \x01(\t\x12\x14\n\x0c\x62ootUniqueId\x18\x03 \x01(\t\x12\x0f\n\x07\x63puName\x18\x04 \x01(\t\x12\x1e\n\x16\x63urrentCpuArchitecture\x18\x05 \x01(\t\x12\x12\n\nkernelType\x18\x06 \x01(\t\x12\x15\n\rkernelVersion\x18\x07 \x01(\t\x12\x17\n\x0fmachineHostName\x18\x08 \x01(\t\x12\x19\n\x11prettyProductName\x18\t \x01(\t\"$\n\x12SystemInfoResponse\x12\x0e\n\x06result\x18\x01 \x01(\x05\"a\n\x15SystemPerfDataRequest\x12\x35\n\ttimeStamp\x18\x01 \x01(\x0b\x32\".qtgrpc.systeminfocustom.TimeStamp\x12\x11\n\tfrequency\x18\x02 \x01(\r\"(\n\x16SystemPerfDataResponse\x12\x0e\n\x06result\x18\x01 \x01(\x05\x32\xec\x01\n\nSystemInfo\x12k\n\x0esendSystemInfo\x12*.qtgrpc.systeminfocustom.SystemInfoRequest\x1a+.qtgrpc.systeminfocustom.SystemInfoResponse\"\x00\x12q\n\x0csendPerfData\x12..qtgrpc.systeminfocustom.SystemPerfDataRequest\x1a/.qtgrpc.systeminfocustom.SystemPerfDataResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -42,5 +42,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SYSTEMPERFDATARESPONSE']._serialized_start=503
   _globals['_SYSTEMPERFDATARESPONSE']._serialized_end=543
   _globals['_SYSTEMINFO']._serialized_start=546
-  _globals['_SYSTEMINFO']._serialized_end=784
+  _globals['_SYSTEMINFO']._serialized_end=782
 # @@protoc_insertion_point(module_scope)

@@ -36,5 +36,5 @@ message SystemPerfDataResponse {
 
 service SystemInfo {
     rpc sendSystemInfo(SystemInfoRequest) returns (SystemInfoResponse) {}
-    rpc sendPerfData(stream SystemPerfDataRequest) returns (SystemPerfDataResponse) {}
+    rpc sendPerfData(SystemPerfDataRequest) returns (SystemPerfDataResponse) {}
 }

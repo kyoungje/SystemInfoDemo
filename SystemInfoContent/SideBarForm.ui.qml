@@ -121,9 +121,10 @@ Column {
                     var perfStats = perfHistoryList.get(0);
 
                     perfStats.curIndex = (perfStats.curIndex + 1) % perfStats.maxCount;
-                    // console.log("new idx: ", perfStats.curIndex, "data:", curValue);
-
                     perfStats.freqStats.set(perfStats.curIndex, {"freq": curValue});
+
+                    if (perfStats.sync)
+                        window.sendPerfDataToServer(curValue);
                 }
             }
         }
