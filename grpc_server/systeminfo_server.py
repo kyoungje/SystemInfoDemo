@@ -2,6 +2,17 @@ import gradio as gr
 import pandas as pd
 import numpy as np
 import random
+import threading
+
+import grpc_server
+
+# Create a child thread for the gRPC server
+gRPC_thread = threading.Thread(target=grpc_server.serve)
+gRPC_thread.daemon = True
+gRPC_thread.start()
+
+DataStroage = grpc_server.SimpleDataStroage()
+SysInfoDict = DataStroage.get()
 
 def get_data():
     return pd.DataFrame({
@@ -9,8 +20,24 @@ def get_data():
         'Time': np.arange(60)
     })
 
-hello_world = gr.Interface(lambda name: "Hello " + name, "text", "text")
-bye_world = gr.Interface(lambda name: "Bye " + name, "text", "text")
+
+def update_timeStampLabel():
+    oldTimeStamp = str(timeStampLabel.value["label"])
+    newTimeStamp = str(SysInfoDict["timeStamp"])
+
+    if oldTimeStamp != newTimeStamp:
+        gr.Info(f"ℹ️ NEW Synchronization\r\nPrevious: {oldTimeStamp}\r\nNow: {newTimeStamp}")
+        timeStampLabel.value["label"] = newTimeStamp
+
+    return newTimeStamp
+
+
+machineUniqueIdLabel = gr.Label(SysInfoDict["machineUniqueId"], label="Unique IDs", color="#7F86FA")
+cpuNameLabel = gr.Label(SysInfoDict["cpuName"], label="CPU Info", color="#7F86FA")
+kernelTypeLabel = gr.Label(SysInfoDict["kernelType"], label="Kernel Info", color="#7F86FA")
+machineHostNameLabel = gr.Label(SysInfoDict["machineHostName"], label="Machine Name", color="#7F86FA")
+prettyProductNameLabel = gr.Label(SysInfoDict["prettyProductName"], label="Product Details", color="#7F86FA")
+timeStampLabel = gr.Label(SysInfoDict["timeStamp"], label="Time Stamp", color="#7F86FA")
 
 with gr.Blocks() as demo:
     gr.Markdown(
@@ -35,13 +62,25 @@ with gr.Blocks() as demo:
     """)
 
     with gr.Row():
-        gr.Label("a", label="Unique IDs")
-        gr.Label("b", label="CPU Info")
-        gr.Label("c", label="Kernel Info")
+        machineUniqueIdLabel.render()
+        cpuNameLabel.render()
+        kernelTypeLabel.render()
+
     with gr.Row():
-        gr.Label("d", label="Machine Name")
-        gr.Label("e", label="Product Details")
-        gr.Label("f", label="Performance Data Info")
+        machineHostNameLabel.render()
+        prettyProductNameLabel.render()
+        timeStampLabel.render()
+
+        demo.load(fn=(lambda : SysInfoDict["machineUniqueId"]), inputs=None, outputs=machineUniqueIdLabel, every=5)
+        demo.load(fn=(lambda : SysInfoDict["cpuName"]), inputs=None, outputs=cpuNameLabel, every=5)
+        demo.load(fn=(lambda : SysInfoDict["kernelType"]), inputs=None, outputs=kernelTypeLabel, every=5)
+        demo.load(fn=(lambda : SysInfoDict["machineHostName"]), inputs=None, outputs=machineHostNameLabel, every=5)
+        demo.load(fn=(lambda : SysInfoDict["prettyProductName"]), inputs=None, outputs=prettyProductNameLabel, every=5)
+        demo.load(fn=update_timeStampLabel, inputs=None, outputs=timeStampLabel, every=5)
+
 
 if __name__ == "__main__":
-    demo.launch()
+    try:
+        demo.queue().launch()
+    except KeyboardInterrupt:
+        print("Parent thread received keyboard interrupt...")
