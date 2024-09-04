@@ -123,6 +123,7 @@ Column {
                     perfStats.curIndex = (perfStats.curIndex + 1) % perfStats.maxCount;
                     perfStats.freqStats.set(perfStats.curIndex, {"freq": curValue});
 
+                    // if "Server Sync" is enabled, send this performance data to the server
                     if (perfStats.sync)
                         window.sendPerfDataToServer(curValue);
                 }

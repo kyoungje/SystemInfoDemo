@@ -20,8 +20,8 @@ Pane {
     property real minValue
     property real curValue
 
+    // Set chart data from the history model
     function setSplineValues() {
-
         var tempArray = Array(maxHistory);
         var historyNum = maxHistory;
         var curHistoryIndex = historyModel.curIndex;
@@ -44,8 +44,6 @@ Pane {
 
         minValue = findMinValue;
         maxValue = findMaxValue;
-
-        // console.log("Modified idx:", historyModel.curIndex, "Data:", tempArray);
 
         return tempArray;
     }
@@ -146,9 +144,4 @@ Pane {
         readonly property color splineGridColor: "#707070"
     }
 
-    // Component.onCompleted: function () {
-    //     maxValue = Math.max(...tempValues).toFixed(1);
-    //     minValue = Math.min(...tempValues).toFixed(1);
-    //     avgValue = (tempValues.reduce((a, b) => a + b, 0) / tempValues.length).toFixed(1);
-    // }
 }

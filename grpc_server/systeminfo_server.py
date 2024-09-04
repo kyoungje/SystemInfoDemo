@@ -67,6 +67,7 @@ with gr.Blocks() as demo:
         prettyProductNameLabel.render()
         timeStampLabel.render()
 
+        # Reload system information from the data storage every 5 seconds
         demo.load(fn=(lambda : SysInfoDict["machineUniqueId"]), inputs=None, outputs=machineUniqueIdLabel, every=5)
         demo.load(fn=(lambda : SysInfoDict["cpuName"]), inputs=None, outputs=cpuNameLabel, every=5)
         demo.load(fn=(lambda : SysInfoDict["kernelType"]), inputs=None, outputs=kernelTypeLabel, every=5)

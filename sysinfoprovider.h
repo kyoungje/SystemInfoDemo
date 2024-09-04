@@ -85,7 +85,7 @@ public:
             // Calculate elapsed time in seconds
             double elapsedTime = (double)(end_end.QuadPart - start_cnt.QuadPart) / freq.QuadPart;
 
-            // Estimate CPU frequency (assuming 1 NOP = 1 cycle, which is a simplification)
+            // Estimate CPU frequency (assuming 1 addition(+) = 1 cycle, which is a simplification)
             double cpuFrequency = iterations / elapsedTime;
 
             if(pSysProvider)

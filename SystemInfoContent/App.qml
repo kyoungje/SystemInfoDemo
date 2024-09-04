@@ -50,6 +50,7 @@ Window {
         }
     }
 
+    // Send system information to server using the gRPC service
     function sendSysInfoToServer()
     {
         var millis = Date.now()
@@ -59,6 +60,7 @@ Window {
         grpcClient.sendSystemInfo(_sysInfoReq, setSysInfoResponse, errorCallback)
     }
 
+    // Send perforance data to server using the gRPC service
     function sendPerfDataToServer(freq)
     {
         var millis = Date.now()

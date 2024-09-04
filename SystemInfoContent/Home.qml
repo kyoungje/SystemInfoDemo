@@ -5,6 +5,7 @@ HomeForm {
         var perfStats = perfHistoryList.get(0)
         perfStats.sync = startSync.checked
 
+        // if "Server Sync" is enabled, send system information data to the server
         if (startSync.checked) {
             window.sendSysInfoToServer()
         }

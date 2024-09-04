@@ -61,12 +61,6 @@ target_link_libraries(SystemInfoClient PRIVATE
     SystemInfoClient_plugin
 )
 
-# install(TARGETS SystemInfoClient
-#     BUNDLE  DESTINATION .
-#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# )
-
 install(TARGETS SystemInfoClient
     BUNDLE  DESTINATION "${INSTALL_EXAMPLEDIR}"
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"

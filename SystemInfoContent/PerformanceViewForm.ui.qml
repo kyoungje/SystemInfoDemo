@@ -64,7 +64,6 @@ Pane {
         CustomSwitch {
             id: startMeasure
             checked: perfHistoryList.active
-            // onCheckedChanged: perfHistoryList.active = startMeasure.checked
         }
     }
 
